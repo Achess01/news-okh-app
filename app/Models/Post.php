@@ -17,4 +17,9 @@ class Post extends Model
         'content',
         'published_at',
     ];
+
+    public function reports()
+    {
+        return $this->hasMany(PostReport::class);
+    }
 }
