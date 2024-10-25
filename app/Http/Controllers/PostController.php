@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\PostReport;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -63,5 +64,21 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         //
+    }
+
+    public function report(Request $request, Post $post) {
+        $request->validate([
+            'reported_reason' => 'required|string|max:255',
+        ]);
+
+        PostReport::create([
+            'user_id' => auth()->id(),
+            'post_id' => $post->id,
+            'reported_reason' => $request->reported_reason,
+            'reported_at' => now(),
+        ]);
+
+        return redirect()->back()->with('success', 'El post ha sido reportado correctamente.');
+
     }
 }

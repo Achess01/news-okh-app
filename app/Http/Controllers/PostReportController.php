@@ -27,20 +27,8 @@ class PostReportController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Post $post)
+    public function store(Request $request, PostReport $post)
     {
-        $request->validate([
-            'reported_reason' => 'required|string|max:255',
-        ]);
-
-        PostReport::create([
-            'user_id' => auth()->id(),
-            'post_id' => $post->post_id,
-            'reported_reason' => $request->reported_reason,
-            'reported_at' => now(),
-        ]);
-
-        return redirect()->back()->with('success', 'El post ha sido reportado correctamente.');
     }
 
     /**

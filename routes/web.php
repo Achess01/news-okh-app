@@ -4,15 +4,13 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\PostReportController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [App\Http\Controllers\PostController::class, 'index'])->name('home');
 
-Route::resource('posts', PostController::class);
+Route::resource('posts', PostController::class)->except(['index', 'show', 'create', 'store'])->middleware('auth');
 
-Route::post('/posts/{post}/report', [PostReportController::class, 'store'])->name('posts.report');
+Route::post('posts', [PostController::class, 'store'])->name('posts.store')->middleware('auth')->middleware('permission:create post');
+
+Route::post('posts/{post}/report', [PostController::class, 'report'])->name('posts.report');
 

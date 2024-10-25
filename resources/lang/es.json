@@ -33,5 +33,8 @@
     "Email Address": "Correo electrónico",
     "Posts": "Publicaciones",
     "Place": "Lugar",
-    "Published_At": "Fecha de publicación"
+    "Published_At": "Fecha de publicación",
+    "Home": "Inicio",
+    "ReportedPosts": "Publicaciones reportadas",
+    "Users": "Usuarios"
 }
