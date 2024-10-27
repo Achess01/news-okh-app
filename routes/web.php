@@ -12,5 +12,5 @@ Route::resource('posts', PostController::class)->except(['index', 'show', 'creat
 
 Route::post('posts', [PostController::class, 'store'])->name('posts.store')->middleware('auth')->middleware('permission:create post');
 
-Route::post('posts/{post}/report', [PostController::class, 'report'])->name('posts.report');
+Route::post('posts/{post}/report', [PostController::class, 'report'])->name('posts.report')->middleware('auth');
 

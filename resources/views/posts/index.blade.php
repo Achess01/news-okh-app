@@ -7,15 +7,13 @@
                 @foreach($posts as $post)
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h2 class="card-title">{{ $post->title }}</h2>
-                            <p class="card-text"><strong>{{__('Place')}}:</strong> {{ $post->place }}</p>
-                            <p class="card-text"><strong>{{__('Published_At')}}
-                                    :</strong> {{ \Carbon\Carbon::parse($post->published_at)->format('d/m/Y H:i') }}</p>
-                            <hr>
                             <div class="card-text">
                                 {!! $post->content !!}
                             </div>
-
+                            <hr>
+                            <p class="card-text"><strong>{{__('Place')}}:</strong> {{ $post->place }}</p>
+                            <p class="card-text"><strong>{{__('Published_At')}}
+                                    :</strong> {{ \Carbon\Carbon::parse($post->published_at)->format('d/m/Y H:i') }}</p>
                             <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                                     data-bs-target="#reportModal-{{ $post->id }}">
                                 Reportar
