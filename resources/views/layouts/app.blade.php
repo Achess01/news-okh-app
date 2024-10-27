@@ -15,6 +15,7 @@
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <x-rich-text::styles theme="richtextlaravel" data-turbo-track="false" />
 </head>
 <body>
 <div id="app">

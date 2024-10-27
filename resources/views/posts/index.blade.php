@@ -3,7 +3,9 @@
 @section('content')
     <div class="container">
         <div class="row">
+{{--            <x-rich-text::styles name="text"/>--}}
             <div class="col-12">
+                <x-trix-input id="bio" name="bio" />
                 @foreach($posts as $post)
                     <div class="card mb-4">
                         <div class="card-body">
