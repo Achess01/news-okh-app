@@ -20,7 +20,8 @@ class PostFactory extends Factory
     {
         return [
             'user_id' => User::all()->random()->id,
-            'slug' => Str::uuid(),
+            'title' => $title = $this->faker->sentence(),
+            'slug' => Str::slug($title),
             'place' => $this->faker->address(),
             'published_at' => $this->faker->dateTime(),
             'content' => '<h1>La Brillante Carrera de Lionel Andrés Messi</h1>

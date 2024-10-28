@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Models\PostReport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -13,8 +14,31 @@ class PostController extends Controller
      */
     public function index()
     {
+        $posts = Post::latest()
+            ->when(Auth::check(), function ($query) {
+                return $query->with(['reports' => function ($query) {
+                    $query->where('user_id', Auth::id());
+                }]);
+            })
+            ->with('user')
+            ->paginate()
+            ->through(function ($post) {
+                $userId = Auth::id();
+
+                // Check if post is editable by the user
+                $post->canEdit = $userId && $post->user_id === $userId;
+
+                // Check if post is reported by the user
+                $post->canReport = $userId && $post->reports->isEmpty() && $post->user_id !== $userId;
+
+                // Clean up any loaded relationships if not needed anymore
+                unset($post->reports);
+
+                return $post;
+            });
+
         return view('posts.index', [
-            'posts' => Post::latest()->paginate()
+            'posts' => $posts
         ]);
     }
 
@@ -80,5 +104,17 @@ class PostController extends Controller
 
         return redirect()->back()->with('success', 'El post ha sido reportado correctamente.');
 
+    }
+
+    public function my_posts(Request $request) {
+        $posts = Post::where('user_id', auth()->id())
+            ->latest()
+            ->paginate()
+            ->get()
+            ->map(function ($post) {
+                $post->canEdit = true;
+                $post->canReport = false;
+                return $post;
+            });
     }
 }
