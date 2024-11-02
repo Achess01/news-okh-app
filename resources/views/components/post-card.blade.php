@@ -5,7 +5,7 @@
         <div class="d-flex">
             <div>{{$post->user->name}} <span class="text-muted">({{$post->user->email}})</span></div>
             @if($post->canEdit)
-                <a href="" class="mx-2">
+                <a href="{{ route('posts.edit', $post) }}" class="mx-2">
                     <x-bi-pen-fill/>
                 </a>
             @endif

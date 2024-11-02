@@ -30,16 +30,22 @@
                                 </button>
                             @else
                                 <!-- Form for non-confirmed actions -->
-                                <form action="{{ route($action['route'], $item->id) }}" method="POST"
-                                      class="d-inline action-form">
-                                    @csrf
-                                    @if (!in_array(strtoupper($action['method'] ?? 'GET'), ['GET', 'POST']))
-                                        @method($action['method'])
-                                    @endif
-                                    <button type="submit" class="btn btn-{{ $action['class'] ?? 'primary' }} btn-sm">
-                                        {{ $action['label'] }}
-                                    </button>
-                                </form>
+                                @if(empty($action['method']) || $action['method'] === 'GET')
+                                    <a href="{{ route($action['route'], $item->id) }}"
+                                       class="btn btn-{{ $action['class'] ?? 'primary' }} btn-sm">{{ $action['label'] }}</a>
+                                @else
+                                    <form action="{{ route($action['route'], $item->id) }}" method="POST"
+                                          class="d-inline action-form">
+                                        @csrf
+                                        @if (!in_array(strtoupper($action['method'] ?? 'GET'), ['GET', 'POST']))
+                                            @method($action['method'])
+                                        @endif
+                                        <button type="submit"
+                                                class="btn btn-{{ $action['class'] ?? 'primary' }} btn-sm">
+                                            {{ $action['label'] }}
+                                        </button>
+                                    </form>
+                                @endif
                             @endif
                         @endforeach
                     </td>
@@ -51,7 +57,8 @@
     {{ $items->links() }}
 </div>
 
-<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

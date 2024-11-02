@@ -46,9 +46,9 @@ class PostController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Post $post)
     {
-        return view('posts.create');
+        return view('posts.create', compact('post'));
     }
 
     /**
@@ -64,9 +64,8 @@ class PostController extends Controller
         ]);
 
         Post::create([
-            'user_id' => 1,
+            'user_id' => auth()->id(),
             'title' => $validated['title'],
-            'slug' => Str::slug($validated['title']),
             'place' => $validated['place'],
             'body' => $validated['body'],
             'event_date' => $validated['event_date'],
@@ -88,7 +87,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        return view('posts.edit', compact('post'));
     }
 
     /**
@@ -96,7 +95,21 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'place' => 'required|string|max:255',
+            'body' => 'required|string',
+            'event_date' => 'required|date',
+        ]);
+
+        $post->update([
+            'title' => $validated['title'],
+            'place' => $validated['place'],
+            'body' => $validated['body'],
+            'event_date' => $validated['event_date'],
+        ]);
+
+        return redirect()->route('posts.my_posts')->with('success', 'Publicación actualizada correctamente');
     }
 
     /**
@@ -104,8 +117,6 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        // Display a success toast with no title
-        $title = $post->title;
         $post->delete();
         return redirect()->back()->with('success', 'El post se ha eliminado correctamente');
     }

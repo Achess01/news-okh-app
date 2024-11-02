@@ -45,6 +45,6 @@ class Post extends Model
 
     public function getEventDateFormattedAttribute()
     {
-        return Carbon::parse($this->event_date)->isoFormat('dddd, D MMMM [de] Y');
+        return Carbon::parse($this->event_date)->isoFormat('dddd, D MMMM [de] Y[.] h:mm A');
     }
 }
