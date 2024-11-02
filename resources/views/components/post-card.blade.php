@@ -10,14 +10,15 @@
                 </a>
             @endif
         </div>
-        <hr />
+        <p class="text-muted">{{ $post->created_at_formatted }}</p>
+        <hr/>
         <div class="card-text">
-            {!! $post->content !!}
+            {!! $post->body !!}
         </div>
         <hr>
         <p class="card-text"><strong>{{__('Place')}}:</strong> {{ $post->place }}</p>
         <p class="card-text"><strong>{{__('Published_At')}}
-                :</strong> {{ \Carbon\Carbon::parse($post->published_at)->format('d/m/Y H:i') }}</p>
+                :</strong> {{ $post->event_date_formatted }}</p>
         @if($post->canReport)
             <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                     data-bs-target="#reportModal-{{ $post->id }}">
@@ -36,7 +37,6 @@
                                 aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <!-- Formulario de reporte -->
                         <form action="{{ route('posts.report', $post->id) }}" method="POST">
                             @csrf
                             <div class="mb-3">

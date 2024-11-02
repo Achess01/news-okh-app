@@ -18,13 +18,9 @@ class PostFactory extends Factory
      */
     public function definition(): array
     {
-        return [
-            'user_id' => User::all()->random()->id,
-            'title' => $title = $this->faker->sentence(),
-            'slug' => Str::slug($title),
-            'place' => $this->faker->address(),
-            'published_at' => $this->faker->dateTime(),
-            'content' => '<h1>La Brillante Carrera de Lionel Andrés Messi</h1>
+
+        $content = '
+        <h1>La Brillante Carrera de Lionel Andrés Messi</h1>
 
 <p><strong>Lionel Andrés Messi</strong> es considerado uno de los mejores futbolistas de todos los tiempos. Nacido en <em>Rosario, Argentina</em>, el 24 de junio de 1987, Messi ha deslumbrado al mundo del fútbol con su increíble habilidad, visión de juego y capacidad goleadora.</p>
 
@@ -45,7 +41,13 @@ class PostFactory extends Factory
 <img src="https://www.fcbarcelona.com/photo-resources/2020/03/29/fb93f75f-ece8-408c-85c8-a3ee0f045291/27-05-09-MESSI-ALEGRIA-02.jpg?width=500" alt="Lionel Messi celebrando un gol" class="img-fluid mt-3"/>
 
 <p>Messi no solo es admirado por su destreza técnica, sino también por su humildad fuera del campo. A lo largo de los años, ha inspirado a millones de aficionados y jóvenes jugadores alrededor del mundo, convirtiéndose en un ícono del fútbol moderno.</p>
-',
+        ';
+        return [
+            'user_id' => User::all()->random()->id,
+            'title' => $this->faker->sentence(),
+            'place' => $this->faker->address(),
+            'event_date' => $this->faker->dateTime(),
+            'body' => $content,
         ];
     }
 }

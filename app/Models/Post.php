@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Tonysm\RichTextLaravel\Models\Traits\HasRichText;
+//setLocale(LC_TIME,'MX_es');
 
 class Post extends Model
 {
@@ -19,10 +21,11 @@ class Post extends Model
 
     protected $fillable = [
         'id',
-        'slug',
         'place',
-        'content',
-        'published_at',
+        'event_date',
+        'title',
+        'user_id',
+        'body',
     ];
 
     public function reports()
@@ -33,5 +36,15 @@ class Post extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getCreatedAtFormattedAttribute()
+    {
+        return Carbon::parse($this->created_at)->diffForHumans();
+    }
+
+    public function getEventDateFormattedAttribute()
+    {
+        return Carbon::parse($this->event_date)->isoFormat('dddd, D MMMM [de] Y');
     }
 }

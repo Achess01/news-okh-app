@@ -6,6 +6,7 @@ use App\Models\Post;
 use App\Models\PostReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -14,13 +15,13 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::latest()
-            ->when(Auth::check(), function ($query) {
-                return $query->with(['reports' => function ($query) {
-                    $query->where('user_id', Auth::id());
-                }]);
-            })
+        $posts = Post::when(Auth::check(), function ($query) {
+            return $query->with(['reports' => function ($query) {
+                $query->where('user_id', Auth::id());
+            }]);
+        })
             ->with('user')
+            ->orderBy('created_at', 'desc')
             ->paginate()
             ->through(function ($post) {
                 $userId = Auth::id();
@@ -47,7 +48,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('posts.create');
     }
 
     /**
@@ -55,7 +56,23 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'place' => 'required|string|max:255',
+            'body' => 'required|string',
+            'event_date' => 'required|date',
+        ]);
+
+        Post::create([
+            'user_id' => 1,
+            'title' => $validated['title'],
+            'slug' => Str::slug($validated['title']),
+            'place' => $validated['place'],
+            'body' => $validated['body'],
+            'event_date' => $validated['event_date'],
+        ]);
+
+        return redirect()->route('posts.my_posts')->with('success', 'Publicación realizada correctamente');
     }
 
     /**
@@ -87,10 +104,14 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        // Display a success toast with no title
+        $title = $post->title;
+        $post->delete();
+        return redirect()->back()->with('success', 'El post se ha eliminado correctamente');
     }
 
-    public function report(Request $request, Post $post) {
+    public function report(Request $request, Post $post)
+    {
         $request->validate([
             'reported_reason' => 'required|string|max:255',
         ]);
@@ -106,15 +127,19 @@ class PostController extends Controller
 
     }
 
-    public function my_posts(Request $request) {
+    public function my_posts(Request $request)
+    {
         $posts = Post::where('user_id', auth()->id())
-            ->latest()
+            ->orderBy('created_at', 'desc')
             ->paginate()
-            ->get()
-            ->map(function ($post) {
+            ->through(function ($post) {
                 $post->canEdit = true;
                 $post->canReport = false;
                 return $post;
             });
+
+        return view('posts.my_posts', [
+            'posts' => $posts
+        ]);
     }
 }

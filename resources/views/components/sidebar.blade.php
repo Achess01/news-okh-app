@@ -20,6 +20,13 @@
                 </a>
             </li>
             @endrole
+            @can('create post')
+            <li>
+                <a href="{{ route('posts.my_posts') }}" class="nav-link link-dark">
+                    Mis publicaciones
+                </a>
+            </li>
+            @endcan
         </ul>
         <hr>
     @endauth
