@@ -6,7 +6,7 @@
                 <th>{{ $column }}</th>
             @endforeach
             @if (!empty($actions))
-                <th>Actions</th>
+                <th></th>
             @endif
         </tr>
         </thead>

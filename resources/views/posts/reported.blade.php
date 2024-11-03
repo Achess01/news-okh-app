@@ -1,13 +1,13 @@
 @php
     $columns = [
         'title' => 'Título',
-        'status' => 'Estado',
-        'created_at' => 'Fecha de publicación',
+        'user_name' => 'Usuario',
+        'created_at' => 'Fecha de creación',
     ];
 
     $actions = [
-        ['route' => 'posts.edit', 'label' => 'Editar', 'class' => 'warning'],
-        ['route' => 'posts.destroy', 'label' => 'Eliminar', 'class' => 'danger', 'confirm' => true, 'method' => 'DELETE']
+        ['route' => 'posts.show', 'label' => 'Ver', 'class' => 'warning'],
+        ['route' => 'posts.destroy', 'label' => 'Ignorar', 'class' => 'dark', 'confirm' => true, 'method' => 'DELETE']
     ];
 @endphp
 
@@ -16,8 +16,7 @@
 
 @section('content')
     <div class="container">
-        <h3>Mis publicaciones</h3>
-        <a href="{{route('posts.create')}}" class="btn btn-outline-primary my-3">Agregar publicación</a>
+        <h3>Publicaciones reportadas</h3>
         <div class="row align-items-center justify-content-center">
             <div class="col-12 col-md-10 ">
                 <x-paginated-table :items="$posts" :columns="$columns" :actions="$actions" />

@@ -26,6 +26,7 @@ class Post extends Model
         'title',
         'user_id',
         'body',
+        'status',
     ];
 
     public function reports()

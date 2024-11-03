@@ -6,13 +6,13 @@
                     {{__('Home')}}
                 </a>
             </li>
-            @role('admin')
-            <li>
-                <a href="#" class="nav-link link-dark">
-                    {{__('ReportedPosts')}}
-                </a>
-            </li>
-            @endrole
+            @can('create post')
+                <li>
+                    <a href="{{ route('posts.my_posts') }}" class="nav-link link-dark">
+                        Mis publicaciones
+                    </a>
+                </li>
+            @endcan
             @role('admin')
             <li>
                 <a href="#" class="nav-link link-dark">
@@ -20,13 +20,13 @@
                 </a>
             </li>
             @endrole
-            @can('create post')
+            @role('admin')
             <li>
-                <a href="{{ route('posts.my_posts') }}" class="nav-link link-dark">
-                    Mis publicaciones
+                <a href="{{route('posts.reported_posts')}}" class="nav-link link-dark">
+                    {{__('ReportedPosts')}}
                 </a>
             </li>
-            @endcan
+            @endrole
         </ul>
         <hr>
     @endauth

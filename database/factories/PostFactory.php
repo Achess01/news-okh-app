@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\PostStatus;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -48,6 +49,7 @@ class PostFactory extends Factory
             'place' => $this->faker->address(),
             'event_date' => $this->faker->dateTime(),
             'body' => $content,
+            'status' => PostStatus::published->value,
         ];
     }
 }

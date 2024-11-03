@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PostStatus;
 use App\Models\Post;
 use App\Models\PostReport;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -20,6 +21,7 @@ class PostController extends Controller
                 $query->where('user_id', Auth::id());
             }]);
         })
+            ->where('status', PostStatus::published->value)
             ->with('user')
             ->orderBy('created_at', 'desc')
             ->paginate()
@@ -69,6 +71,7 @@ class PostController extends Controller
             'place' => $validated['place'],
             'body' => $validated['body'],
             'event_date' => $validated['event_date'],
+            'status' => auth()->user()->can('publish without review') ? PostStatus::published->value : PostStatus::publishReview->value,
         ]);
 
         return redirect()->route('posts.my_posts')->with('success', 'Publicación realizada correctamente');
@@ -79,7 +82,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        return view('posts.show', compact('post'));
     }
 
     /**
@@ -134,6 +137,13 @@ class PostController extends Controller
             'reported_at' => now(),
         ]);
 
+        $qty = $post->reports()->count();
+        if ($qty >= 3) {
+            $post->update([
+                'status' => PostStatus::reportedReview
+            ]);
+        }
+
         return redirect()->back()->with('success', 'El post ha sido reportado correctamente.');
 
     }
@@ -152,5 +162,44 @@ class PostController extends Controller
         return view('posts.my_posts', [
             'posts' => $posts
         ]);
+    }
+
+    public function reported(Request $request)
+    {
+        $posts = Post::where('status', PostStatus::reportedReview->value)
+            ->with('user')
+            ->orderBy('created_at', 'desc')
+            ->paginate()
+            ->through(function ($post) {
+                $post->canEdit = false;
+                $post->canReport = false;
+                $post->user_name = $post->user ? $post->user->name . '(' . $post->user->email . ')' : '';
+
+                return $post;
+            });
+
+        return view('posts.reported', [
+            'posts' => $posts
+        ]);
+    }
+
+    public function accept_reports(Post $post): \Illuminate\Http\RedirectResponse
+    {
+        $post->update([
+            'status' => PostStatus::reportedAccepted->value
+        ]);
+
+        $hasProPublisherRole = $post->user->hasRole('pro_publisher');
+        $hasBasicPublisherRole = $post->user->hasRole('basic_publisher');
+        $message = '';
+        if ($hasProPublisherRole) {
+            $post->user->syncRoles(['basic_publisher']);
+            $message = 'El usuario ' . $post->user->email . ' perdió el permiso para publicar sin revisión';
+        } else if ($hasBasicPublisherRole) {
+            $post->user->removeRole('basic_publisher');
+            $message = 'El usuario ' . $post->user->email . ' ya no podrá crear publicaciones';
+        }
+
+        return redirect()->route('posts.reported_posts')->with('success', $message);
     }
 }

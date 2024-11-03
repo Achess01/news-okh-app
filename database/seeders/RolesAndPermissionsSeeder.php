@@ -15,14 +15,16 @@ class RolesAndPermissionsSeeder extends Seeder
     public function run(): void
     {
         $admin_role = Role::create(['name' => 'admin']);
-        $publisher_role = Role::create(['name' => 'publisher']);
+        $basic_publisher_role = Role::create(['name' => 'basic_publisher']);
+        $pro_publisher_role = Role::create(['name' => 'pro_publisher']);
 
         $permission1 = Permission::create(['name' => 'create post']);
-        $permission2 = Permission::create(['name' => 'no check post']);
+        $permission2 = Permission::create(['name' => 'publish without review']);
         $permission3 = Permission::create(['name' => 'create user']);
         $permission4 = Permission::create(['name' => 'edit user']);
 
         $admin_role->syncPermissions([$permission1, $permission2, $permission3, $permission4]);
-        $publisher_role->syncPermissions([$permission1, $permission2]);
+        $basic_publisher_role->syncPermissions([$permission1]);
+        $pro_publisher_role->syncPermissions([$permission1, $permission2]);
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\PostStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,6 +18,9 @@ return new class extends Migration {
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('title');
             $table->text('place');
+            $table->enum('status', array_map(function ($st) {
+                return $st->value;
+            }, PostStatus::cases()));
             $table->dateTime('event_date');
 
             $table->timestamps();

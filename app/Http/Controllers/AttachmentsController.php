@@ -15,7 +15,8 @@ class AttachmentsController extends Controller
         $path = $request->file('file')->storePublicly('attachments', ['disk' => 'public']);
 
         return [
-            'url' => Storage::disk('public')->url($path),
+            'url' => $url = Storage::disk('public')->url($path),
+            'href' => $url,
         ];
     }
 }
