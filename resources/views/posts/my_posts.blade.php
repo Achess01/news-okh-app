@@ -18,7 +18,7 @@
     <div class="container">
         <h3>Mis publicaciones</h3>
         <a href="{{route('posts.create')}}" class="btn btn-outline-primary my-3">Agregar publicación</a>
-        <div class="row align-items-center justify-content-center">
+        <div class="row align-items-center justify-content-start">
             <div class="col-12 col-md-10 ">
                 <x-paginated-table :items="$posts" :columns="$columns" :actions="$actions" />
             </div>

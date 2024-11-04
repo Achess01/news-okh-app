@@ -7,4 +7,5 @@ enum PostStatus: string {
     case published = 'Publicado';
     case reportedReview = 'Revisión de reportes';
     case reportedAccepted = 'Reporte aceptado';
+    case publishRejected = 'Rechazada';
 }

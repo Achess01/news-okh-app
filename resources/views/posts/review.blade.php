@@ -6,7 +6,7 @@
     ];
 
     $actions = [
-        ['route' => 'posts.show_reported', 'label' => 'Ver', 'class' => 'primary'],
+        ['route' => 'posts.show_review', 'label' => 'Ver', 'class' => 'primary'],
     ];
 @endphp
 
@@ -15,7 +15,7 @@
 
 @section('content')
     <div class="container">
-        <h3>Publicaciones reportadas</h3>
+        <h3>Publicaciones pendientes de revisión</h3>
         <div class="row align-items-center justify-content-start">
             <div class="col-12 col-md-10 ">
                 <x-paginated-table :items="$posts" :columns="$columns" :actions="$actions" />

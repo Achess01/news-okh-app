@@ -2,15 +2,26 @@
 
 @section('content')
     <div class="container">
-        <div class="row mb-3">
+        <div class="d-flex mb-3 justify-content-start">
             <form action="{{ route('posts.accept_reports', $post) }}" method="POST"
-                  class="d-inline action-form">
+                  class="d-inline action-form me-3">
                 @csrf
                 <button type="submit"
-                        class="btn btn-outline-primary btn-sm">
+                        class="btn btn-primary btn-sm">
                     Aceptar reportes
                 </button>
             </form>
+
+
+            <form action="{{ route('posts.ignore_reports', $post) }}" method="POST"
+                  class="d-inline action-form">
+                @csrf
+                <button type="submit"
+                        class="btn btn-secondary btn-sm">
+                    Ignorar reportes
+                </button>
+            </form>
+
         </div>
         <div class="row align-items-start justify-content-center">
             <div class="col">

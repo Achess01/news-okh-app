@@ -77,12 +77,12 @@ class PostController extends Controller
         return redirect()->route('posts.my_posts')->with('success', 'Publicación realizada correctamente');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Post $post)
+    public function show_reported(Post $post)
     {
-        return view('posts.show', compact('post'));
+        if($post->status !== PostStatus::reportedReview->value){
+            abort(404);
+        }
+        return view('posts.show_reported', compact('post'));
     }
 
     /**
@@ -197,9 +197,69 @@ class PostController extends Controller
             $message = 'El usuario ' . $post->user->email . ' perdió el permiso para publicar sin revisión';
         } else if ($hasBasicPublisherRole) {
             $post->user->removeRole('basic_publisher');
-            $message = 'El usuario ' . $post->user->email . ' ya no podrá crear publicaciones';
+            $message = 'El usuario ' . $post->user->email . ' ya no podrá hacer publicaciones';
         }
 
         return redirect()->route('posts.reported_posts')->with('success', $message);
     }
+
+    public function ignore_reports(Post $post): \Illuminate\Http\RedirectResponse
+    {
+        $post->update([
+            'status' => PostStatus::published->value
+        ]);
+
+        PostReport::where('post_id', $post->id)->delete();
+
+        return redirect()->route('posts.reported_posts')->with('success', "El post '{$post->title}' ha regresado a la pantalla principal");
+    }
+
+    public function review(Request $request)
+    {
+        $posts = Post::where('status', PostStatus::publishReview->value)
+            ->with('user')
+            ->orderBy('created_at', 'desc')
+            ->paginate()
+            ->through(function ($post) {
+                $post->canEdit = false;
+                $post->canReport = false;
+                $post->user_name = $post->user ? $post->user->name . '(' . $post->user->email . ')' : '';
+
+                return $post;
+            });
+
+        return view('posts.review', [
+            'posts' => $posts
+        ]);
+    }
+
+    public function show_review(Post $post)
+    {
+        if($post->status !== PostStatus::publishReview->value){
+            abort(404);
+        }
+        return view('posts.show_review', compact('post'));
+    }
+
+    public function accept_post(Post $post): \Illuminate\Http\RedirectResponse
+    {
+        $post->update([
+            'status' => PostStatus::published->value
+        ]);
+
+//        $posts = Post::where('status', PostStatus::published->value)->get();
+
+
+        return redirect()->route('posts.review')->with('success', "El post '{$post->title}' ha sido aprobado");
+    }
+
+    public function reject_post(Post $post): \Illuminate\Http\RedirectResponse
+    {
+        $post->update([
+            'status' => PostStatus::publishRejected->value
+        ]);
+
+        return redirect()->route('posts.review')->with('success', "El post '{$post->title}' ha sido rechazado");
+    }
+
 }

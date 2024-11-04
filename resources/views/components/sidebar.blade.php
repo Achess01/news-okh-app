@@ -6,6 +6,13 @@
                     {{__('Home')}}
                 </a>
             </li>
+            @role('admin')
+            <li>
+                <a href="#" class="nav-link link-dark">
+                    {{__('Users')}}
+                </a>
+            </li>
+            @endrole
             @can('create post')
                 <li>
                     <a href="{{ route('posts.my_posts') }}" class="nav-link link-dark">
@@ -15,15 +22,15 @@
             @endcan
             @role('admin')
             <li>
-                <a href="#" class="nav-link link-dark">
-                    {{__('Users')}}
+                <a href="{{route('posts.reported_posts')}}" class="nav-link link-dark">
+                    {{__('ReportedPosts')}}
                 </a>
             </li>
             @endrole
             @role('admin')
             <li>
-                <a href="{{route('posts.reported_posts')}}" class="nav-link link-dark">
-                    {{__('ReportedPosts')}}
+                <a href="{{route('posts.review')}}" class="nav-link link-dark">
+                    Publicaciones pendientes de revisión
                 </a>
             </li>
             @endrole
