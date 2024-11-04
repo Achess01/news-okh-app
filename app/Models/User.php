@@ -56,4 +56,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Post::class);
     }
+
+    public function notificationsPost()
+    {
+        return $this->belongsToMany(Post::class, 'posts_users', 'user_id', 'post_id');
+    }
 }

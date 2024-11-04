@@ -14,7 +14,7 @@
             <div class="nav-item dropdown">
                 <a id="navbarDropdown" class="nav-link" href="#" role="button" data-bs-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
-                    <x-bi-three-dots-vertical />
+                    <x-bi-three-dots-vertical/>
                 </a>
 
                 @if($post->canReport)
@@ -37,6 +37,17 @@
         <p class="card-text mb-0"><strong>{{__('Place')}}:</strong> {{ $post->place }}</p>
         <p class="card-text mb-0"><strong>{{__('Published_At')}}
                 :</strong> {{ $post->event_date_formatted }}</p>
+
+        @if($post->canSubscribe)
+            <form action="{{ route('posts.subscribe_user', $post) }}" method="POST"
+                  class="d-inline action-form me-3">
+                @csrf
+                <button type="submit"
+                        class="mt-2 btn btn-primary">
+                    Deseo asistir
+                </button>
+            </form>
+        @endif
 
         <!-- Modal -->
         <div class="modal fade" id="reportModal-{{ $post->id }}" tabindex="-1"

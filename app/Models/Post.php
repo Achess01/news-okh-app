@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Tonysm\RichTextLaravel\Models\Traits\HasRichText;
+
 //setLocale(LC_TIME,'MX_es');
 
 class Post extends Model
@@ -47,5 +48,10 @@ class Post extends Model
     public function getEventDateFormattedAttribute()
     {
         return Carbon::parse($this->event_date)->isoFormat('dddd, D MMMM [de] Y[.] h:mm A');
+    }
+
+    public function notificateTo()
+    {
+        return $this->belongsToMany(User::class, 'posts_users', 'post_id', 'user_id');
     }
 }

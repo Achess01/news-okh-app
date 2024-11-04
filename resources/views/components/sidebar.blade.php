@@ -2,17 +2,15 @@
     @auth
         <ul class="nav nav-pills flex-column mb-auto">
             <li class="nav-item">
-                <a href="/" class="nav-link">
+                <a href="/" class="nav-link link-dark">
                     {{__('Home')}}
                 </a>
             </li>
-            @role('admin')
-            <li>
-                <a href="#" class="nav-link link-dark">
-                    {{__('Users')}}
+            <li class="nav-item">
+                <a href="{{route('notifications.index')}}" class="nav-link link-dark">
+                    Notificaciones
                 </a>
             </li>
-            @endrole
             @can('create post')
                 <li>
                     <a href="{{ route('posts.my_posts') }}" class="nav-link link-dark">

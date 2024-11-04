@@ -28,13 +28,14 @@ class PostController extends Controller
             ->through(function ($post) {
                 $userId = Auth::id();
 
-                // Check if post is editable by the user
+                $post->canSubscribe = $post->notificateTo()->where('user_id', $userId)->count() < 1;
+
                 $post->canEdit = $userId && $post->user_id === $userId;
 
-                // Check if post is reported by the user
+
                 $post->canReport = $userId && $post->reports->isEmpty() && $post->user_id !== $userId;
 
-                // Clean up any loaded relationships if not needed anymore
+
                 unset($post->reports);
 
                 return $post;
@@ -83,6 +84,11 @@ class PostController extends Controller
             abort(404);
         }
         return view('posts.show_reported', compact('post'));
+    }
+
+    public function show(Post $post)
+    {
+        return view('posts.show', compact('post'));
     }
 
     /**
@@ -155,6 +161,7 @@ class PostController extends Controller
             ->paginate()
             ->through(function ($post) {
                 $post->canEdit = true;
+                $post->canSubscribe = false;
                 $post->canReport = false;
                 return $post;
             });
@@ -172,6 +179,7 @@ class PostController extends Controller
             ->paginate()
             ->through(function ($post) {
                 $post->canEdit = false;
+                $post->canSubscribe = false;
                 $post->canReport = false;
                 $post->user_name = $post->user ? $post->user->name . '(' . $post->user->email . ')' : '';
 
@@ -222,6 +230,7 @@ class PostController extends Controller
             ->paginate()
             ->through(function ($post) {
                 $post->canEdit = false;
+                $post->canSubscribe = false;
                 $post->canReport = false;
                 $post->user_name = $post->user ? $post->user->name . '(' . $post->user->email . ')' : '';
 
@@ -270,4 +279,19 @@ class PostController extends Controller
         return redirect()->route('posts.review')->with('success', "El post '{$post->title}' ha sido rechazado");
     }
 
+    public function subscribe_user(Post $post): \Illuminate\Http\RedirectResponse
+    {
+        $subscribed = auth()->user()->notificationsPost()->where('post_id', $post->id)->count() > 0;
+
+        if (!$subscribed) {
+            auth()->user()->notificationsPost()->attach($post);
+        }
+        return redirect()->back()->with('success', "Revisa tus notificaciones para más información");
+    }
+
+    public function unsubscribe_user(Post $post): \Illuminate\Http\RedirectResponse
+    {
+        auth()->user()->notificationsPost()->where('post_id', $post->id)->delete();
+        return redirect()->back()->with('success', "Notificación removida");
+    }
 }
