@@ -6,6 +6,7 @@
         <div class="row align-items-center justify-content-start">
             @foreach ($posts as $notification)
                 <div class="card p-3 mb-3">
+                    <h4>{{$notification->title}}</h4>
                     <p><strong>Fecha del evento:</strong> {{ $notification->event_date_formatted }}</p>
                     <p><strong>Tiempo faltante:</strong>
                         @if (now()->greaterThan($notification->event_date))

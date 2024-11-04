@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Post;
+use App\Models\PostReport;
 use App\Models\User;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -52,5 +53,6 @@ class DatabaseSeeder extends Seeder
         $p1->assignRole('basic_publisher');
         $p2->assignRole('pro_publisher');
         Post::factory(20)->create();
+        PostReport::factory(6)->create();
     }
 }

@@ -20,7 +20,7 @@ class PostFactory extends Factory
     public function definition(): array
     {
 
-        $title = $this->faker->title();
+        $title = $this->faker->sentence();
         $p = $this->faker->paragraph();
         $p2 = $this->faker->paragraph();
         $imageUrl = 'https://www.fcbarcelona.com/photo-resources/2020/03/29/fb93f75f-ece8-408c-85c8-a3ee0f045291/27-05-09-MESSI-ALEGRIA-02.jpg?width=500';

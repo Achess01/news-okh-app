@@ -291,7 +291,7 @@ class PostController extends Controller
 
     public function unsubscribe_user(Post $post): \Illuminate\Http\RedirectResponse
     {
-        auth()->user()->notificationsPost()->where('post_id', $post->id)->delete();
+        auth()->user()->notificationsPost()->detach($post->id);
         return redirect()->back()->with('success', "Notificación removida");
     }
 }
