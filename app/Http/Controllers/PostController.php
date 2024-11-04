@@ -79,7 +79,7 @@ class PostController extends Controller
 
     public function show_reported(Post $post)
     {
-        if($post->status !== PostStatus::reportedReview->value){
+        if ($post->status !== PostStatus::reportedReview->value) {
             abort(404);
         }
         return view('posts.show_reported', compact('post'));
@@ -235,7 +235,7 @@ class PostController extends Controller
 
     public function show_review(Post $post)
     {
-        if($post->status !== PostStatus::publishReview->value){
+        if ($post->status !== PostStatus::publishReview->value) {
             abort(404);
         }
         return view('posts.show_review', compact('post'));
@@ -247,10 +247,18 @@ class PostController extends Controller
             'status' => PostStatus::published->value
         ]);
 
-//        $posts = Post::where('status', PostStatus::published->value)->get();
+        $message = "El post '{$post->title}' ha sido aprobado";
+        if ($post->user->hasRole('basic_publisher')) {
+            $posts = Post::where('status', PostStatus::published->value)->where('user_id', $post->user->id);
+            if ($posts->count() >= 2) {
+                $post->user->syncRoles(['pro_publisher']);
+            }
+
+            $message = $message . " El usuario {$post->user->email} ahora puede publicar sin revisión";
+        }
 
 
-        return redirect()->route('posts.review')->with('success', "El post '{$post->title}' ha sido aprobado");
+        return redirect()->route('posts.review')->with('success', $message);
     }
 
     public function reject_post(Post $post): \Illuminate\Http\RedirectResponse
