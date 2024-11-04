@@ -6,10 +6,10 @@
         <div class="row align-items-center justify-content-start">
             @foreach ($posts as $notification)
                 <div class="card p-3 mb-3">
-                    <p>Fecha del evento: {{ $notification->event_date_formatted }}</p>
-                    <p>Tiempo faltante:
+                    <p><strong>Fecha del evento:</strong> {{ $notification->event_date_formatted }}</p>
+                    <p><strong>Tiempo faltante:</strong>
                         @if (now()->greaterThan($notification->event_date))
-                            0 días
+                            El evento ya ha pasado
                         @else
                             <span id="countdown-{{ $notification->id }}"></span>
                         @endif
