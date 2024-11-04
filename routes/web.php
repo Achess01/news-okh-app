@@ -30,3 +30,11 @@ Route::get('me/notifications', [NotificationsController::class, 'index'])->name(
 
 
 Route::post('/attachments', [AttachmentsController::class, 'store'])->name('attachments.store')->middleware('auth');
+
+use App\Http\Controllers\ReportController;
+
+Route::prefix('reports')->group(function () {
+    Route::get('post-status', [ReportController::class, 'postStatusReport'])->name('reports.postStatus');
+    Route::get('post-reports', [ReportController::class, 'postReportsReport'])->name('reports.postReports');
+})->middleware('auth')->middleware('role:admin');
+

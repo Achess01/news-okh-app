@@ -32,6 +32,20 @@
                 </a>
             </li>
             @endrole
+            @role('admin')
+            <li>
+                <a href="{{route('reports.postReports')}}" class="nav-link link-dark">
+                    Reportes a publicaciones
+                </a>
+            </li>
+            @endrole
+            @role('admin')
+            <li>
+                <a href="{{route('reports.postStatus')}}" class="nav-link link-dark">
+                    Estados de publicaciones
+                </a>
+            </li>
+            @endrole
         </ul>
         <hr>
     @endauth
